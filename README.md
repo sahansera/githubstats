@@ -57,3 +57,5 @@ mypy src
 ## License
 
 MIT
+
+> Much of the code was written by Claude 4 LLM. The code is provided under the MIT License, allowing for free use, modification, and distribution.
