@@ -1,0 +1,59 @@
+# GitHubStats
+
+A CLI tool to fetch GitHub repository statistics.
+
+## Installation
+
+```bash
+pip install githubstats
+```
+
+## Usage
+
+```bash
+# Basic usage
+githubstats python/cpython
+
+# With GitHub token for higher rate limits
+export GITHUB_TOKEN=your_token_here
+githubstats python/cpython
+
+# Or pass token directly
+githubstats python/cpython --token your_token_here
+```
+
+## Features
+
+- Fetch repository statistics including stars, forks, issues, and more
+- Support for GitHub API token authentication
+- Clean, formatted output
+- Cross-platform compatibility
+
+## Development
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/githubstats.git
+cd githubstats
+
+# Create virtual environment
+uv venv
+source .venv/bin/activate
+
+# Install in development mode
+uv pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Format code
+black .
+isort .
+
+# Type checking
+mypy src
+```
+
+## License
+
+MIT
