@@ -1,25 +1,25 @@
-# GitHubStats
+# RepoStats
 
 A CLI tool to fetch GitHub repository statistics.
 
 ## Installation
 
 ```bash
-pip install githubstats
+pip install repostats
 ```
 
 ## Usage
 
 ```bash
 # Basic usage
-githubstats python/cpython
+repostats python/cpython
 
 # With GitHub token for higher rate limits
 export GITHUB_TOKEN=your_token_here
-githubstats python/cpython
+repostats python/cpython
 
 # Or pass token directly
-githubstats python/cpython --token your_token_here
+repostats python/cpython --token your_token_here
 ```
 
 ## Features
@@ -33,8 +33,8 @@ githubstats python/cpython --token your_token_here
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/githubstats.git
-cd githubstats
+git clone https://github.com/yourusername/repostats.git
+cd repostats
 
 # Create virtual environment
 uv venv
