@@ -33,7 +33,7 @@ repostats python/cpython --token your_token_here
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/repostats.git
+git clone https://github.com/sahansera/repostats.git
 cd repostats
 
 # Create virtual environment
