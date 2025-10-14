@@ -30,9 +30,9 @@ def test_cli_success():
         result = runner.invoke(main, ["test/repo"])
 
         assert result.exit_code == 0
-        assert "test/repo Statistics:" in result.output
-        assert "Stars:       100" in result.output
-        assert "Forks:       50" in result.output
+        assert "test/repo statistics" in result.output
+        assert "Stars       : 100" in result.output
+        assert "Forks       : 50" in result.output
 
 
 def test_cli_invalid_repo_format():
@@ -41,7 +41,7 @@ def test_cli_invalid_repo_format():
 
     result = runner.invoke(main, ["invalid-repo"])
 
-    assert result.exit_code == 0
+    assert result.exit_code == 1
     assert "Error: Repository should be in the format 'owner/repo'" in result.output
 
 
@@ -82,5 +82,5 @@ def test_cli_api_error():
 
         result = runner.invoke(main, ["test/repo"])
 
-        assert result.exit_code == 0
+        assert result.exit_code == 1
         assert "Error: Failed to fetch repository stats: API Error" in result.output

@@ -14,24 +14,32 @@ def main(repo: str, token: Union[str, None] = None):
     REPO should be in the format 'owner/repo', e.g., 'python/cpython'
     """
     try:
-        owner, repo_name = repo.split("/")
+        owner, repo_name = repo.split("/", 1)
     except ValueError:
-        click.echo("Error: Repository should be in the format 'owner/repo'")
-        return
+        click.echo("Error: Repository should be in the format 'owner/repo'", err=True)
+        raise SystemExit(1)
 
     client = GitHubClient(token)
     try:
         stats = client.get_repo_stats(owner, repo_name)
-        click.echo(f"\n{stats['name']} Statistics:")
-        click.echo(f"⭐ Stars:       {stats['stars']:,}")
-        click.echo(f"🍴 Forks:       {stats['forks']:,}")
-        click.echo(f"⚠️ Open Issues: {stats['open_issues']:,}")
-        click.echo(f"👀 Watchers:    {stats['watchers']:,}")
-        click.echo(f"🔤 Language:    {stats['language']}")
-        click.echo(f"📅 Created:     {stats['created_at']}")
-        click.echo(f"📝 Updated:     {stats['updated_at']}\n")
+        click.echo()
+        click.echo(f"{stats['name']} statistics")
+        click.echo("-" * len(f"{stats['name']} statistics"))
+        rows = (
+            ("Stars", f"{stats['stars']:,}"),
+            ("Forks", f"{stats['forks']:,}"),
+            ("Open issues", f"{stats['open_issues']:,}"),
+            ("Watchers", f"{stats['watchers']:,}"),
+            ("Language", stats["language"] or "Unknown"),
+            ("Created", stats["created_at"]),
+            ("Updated", stats["updated_at"]),
+        )
+        for label, value in rows:
+            click.echo(f"{label:<12}: {value}")
+        click.echo()
     except Exception as e:
-        click.echo(f"Error: Failed to fetch repository stats: {e}")
+        click.echo(f"Error: Failed to fetch repository stats: {e}", err=True)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

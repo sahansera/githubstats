@@ -1,4 +1,4 @@
-# RepoStats
+# ⚡️ repostats
 
 A CLI tool to fetch GitHub repository statistics.
 
@@ -22,11 +22,28 @@ repostats python/cpython
 repostats python/cpython --token your_token_here
 ```
 
+### Example output
+
+```text
+python/cpython statistics
+-------------------------
+Stars       : 58,000
+Forks       : 29,000
+Open issues : 992
+Watchers    : 3,400
+Language    : Python
+Created     : 2007-02-20T00:00:00Z
+Updated     : 2024-01-15T12:34:56Z
+```
+
+The command exits with code `1` when the GitHub API request fails (for example, when the repository is missing or you hit a rate limit), which makes it easy to integrate into scripts.
+
 ## Features
 
 - Fetch repository statistics including stars, forks, issues, and more
 - Support for GitHub API token authentication
-- Clean, formatted output
+- Clean, accessible output that works well in plain-text terminals
+- Helpful error messages and non-zero exit codes on failure
 - Cross-platform compatibility
 
 ## Development
