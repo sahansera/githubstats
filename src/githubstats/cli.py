@@ -1,14 +1,40 @@
-from typing import Union
+import json
+from typing import Dict, Iterable, Tuple, Union
 
 import click
 
 from .github import GitHubClient
 
 
+def format_text_rows(stats: Dict[str, Union[str, int]]) -> Iterable[Tuple[str, str]]:
+    """Produce label/value rows for text output."""
+    return (
+        ("Stars", f"{stats['stars']:,}"),
+        ("Forks", f"{stats['forks']:,}"),
+        ("Open issues", f"{stats['open_issues']:,}"),
+        ("Watchers", f"{stats['watchers']:,}"),
+        ("Language", stats["language"] or "Unknown"),
+        ("Created", stats["created_at"]),
+        ("Updated", stats["updated_at"]),
+    )
+
+
 @click.command()
 @click.argument("repo")
 @click.option("--token", help="GitHub API token", envvar="GITHUB_TOKEN")
-def main(repo: str, token: Union[str, None] = None):
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json", "yaml"], case_sensitive=False),
+    default="text",
+    show_default=True,
+    help="Output format",
+)
+def main(
+    repo: str,
+    token: Union[str, None] = None,
+    output_format: str = "text",
+):
     """Fetch statistics for a GitHub repository.
 
     REPO should be in the format 'owner/repo', e.g., 'python/cpython'
@@ -22,21 +48,27 @@ def main(repo: str, token: Union[str, None] = None):
     client = GitHubClient(token)
     try:
         stats = client.get_repo_stats(owner, repo_name)
-        click.echo()
-        click.echo(f"{stats['name']} statistics")
-        click.echo("-" * len(f"{stats['name']} statistics"))
-        rows = (
-            ("Stars", f"{stats['stars']:,}"),
-            ("Forks", f"{stats['forks']:,}"),
-            ("Open issues", f"{stats['open_issues']:,}"),
-            ("Watchers", f"{stats['watchers']:,}"),
-            ("Language", stats["language"] or "Unknown"),
-            ("Created", stats["created_at"]),
-            ("Updated", stats["updated_at"]),
-        )
-        for label, value in rows:
-            click.echo(f"{label:<12}: {value}")
-        click.echo()
+        normalized_format = output_format.lower()
+        if normalized_format == "json":
+            click.echo(json.dumps(stats, indent=2, sort_keys=False))
+        elif normalized_format == "yaml":
+            try:
+                import yaml
+            except ImportError as exc:
+                click.echo(
+                    "Error: YAML output requested but PyYAML is not installed.",
+                    err=True,
+                )
+                raise SystemExit(1) from exc
+            click.echo(yaml.safe_dump(stats, sort_keys=False).rstrip())
+        else:
+            click.echo()
+            header = f"{stats['name']} statistics"
+            click.echo(header)
+            click.echo("-" * len(header))
+            for label, value in format_text_rows(stats):
+                click.echo(f"{label:<12}: {value}")
+            click.echo()
     except Exception as e:
         click.echo(f"Error: Failed to fetch repository stats: {e}", err=True)
         raise SystemExit(1)
